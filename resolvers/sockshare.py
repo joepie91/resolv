@@ -24,10 +24,11 @@ def resolve(url):
 	try:
 		browser.select_form(nr=0)
 		result = browser.submit()
+		page = result.read()
 	except Exception, e:
 		raise ResolverError("The file was removed, or the URL is incorrect.")
 		
-	matches = re.search("playlist: '([^']+)'", result.read())
+	matches = re.search("playlist: '([^']+)'", page)
 	
 	if matches is None:
 		raise ResolverError("No playlist was found on the given URL; the SockShare server for this file may be in maintenance mode, or the given URL may not be a video file. The SockShare resolver currently only supports video links.")
@@ -46,4 +47,9 @@ def resolve(url):
 	
 	video_file = matches.group(1)
 	
-	return { 'video': video_file }
+	try:
+		video_title = re.search('<a href="\/file\/[^"]+"[^>]*><strong>([^<]*)<\/strong><\/a>', page).group(1)
+	except:
+		raise ResolverError("Could not find the video title.")
+	
+	return { 'title': video_title, 'videos': { 'video': video_file } }
