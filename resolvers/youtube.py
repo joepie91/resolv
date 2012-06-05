@@ -73,4 +73,4 @@ def resolve(url):
 	except:
 		raise ResolverError("Could not find the video title.")
 	
-	return { 'title': video_title, 'urls': stream_pool }
+	return { 'title': video_title, 'videos': stream_pool }
