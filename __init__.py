@@ -10,3 +10,12 @@ def resolve(url):
 		return onechannel.resolve(url)
 	else:
 		return {}
+
+def recurse(url):
+	while True:
+		result = resolve(url)
+		
+		if 'url' not in result:
+			return result
+		
+		url = result['url']
