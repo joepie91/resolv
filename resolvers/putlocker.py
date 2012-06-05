@@ -5,7 +5,7 @@ def resolve(url):
 	try:
 		import mechanize
 	except ImportError:
-		raise ResolverError("The Python mechanize module is required to resolve Putlocker URLs.")
+		raise ResolverError("The Python mechanize module is required to resolve PutLocker URLs.")
 	
 	matches = re.search("https?:\/\/(www\.)?putlocker.com\/(file|embed)\/([A-Z0-9]+)", url)
 
@@ -19,7 +19,7 @@ def resolve(url):
 		browser.set_handle_robots(False)
 		browser.open("http://putlocker.com/embed/%s" % video_id)
 	except:
-		raise ResolverError("The Putlocker site could not be reached.")
+		raise ResolverError("The PutLocker site could not be reached.")
 	
 	try:
 		browser.select_form(nr=0)
@@ -30,7 +30,7 @@ def resolve(url):
 	matches = re.search("playlist: '([^']+)'", result.read())
 	
 	if matches is None:
-		raise ResolverError("No playlist was found on the given URL; the Putlocker server for this file may be in maintenance mode, or the given URL may not be a video file. The Putlocker resolver currently only supports video links.")
+		raise ResolverError("No playlist was found on the given URL; the PutLocker server for this file may be in maintenance mode, or the given URL may not be a video file. The PutLocker resolver currently only supports video links.")
 	
 	playlist = matches.group(1)
 	
@@ -42,7 +42,7 @@ def resolve(url):
 	matches = re.search("url=\"([^\"]+)\" type=\"video\/x-flv\"", browser.response().read())
 	
 	if matches is None:
-		raise ResolverError("The playlist file does not contain any video URLs. The Putlocker resolver currently only supports video links.")
+		raise ResolverError("The playlist file does not contain any video URLs. The PutLocker resolver currently only supports video links.")
 	
 	video_file = matches.group(1)
 	

@@ -5,12 +5,12 @@ def resolve(url):
 	try:
 		import mechanize
 	except ImportError:
-		raise ResolverError("The Python mechanize module is required to resolve Sockshare URLs.")
+		raise ResolverError("The Python mechanize module is required to resolve SockShare URLs.")
 	
 	matches = re.search("https?:\/\/(www\.)?sockshare.com\/(file|embed)\/([A-Z0-9]+)", url)
 
 	if matches is None:
-		raise ResolverError("The provided URL is not a valid Sockshare URL.")
+		raise ResolverError("The provided URL is not a valid SockShare URL.")
 	
 	video_id = matches.group(3)
 	
@@ -19,7 +19,7 @@ def resolve(url):
 		browser.set_handle_robots(False)
 		browser.open("http://sockshare.com/embed/%s" % video_id)
 	except:
-		raise ResolverError("The Sockshare site could not be reached.")
+		raise ResolverError("The SockShare site could not be reached.")
 	
 	try:
 		browser.select_form(nr=0)
@@ -30,7 +30,7 @@ def resolve(url):
 	matches = re.search("playlist: '([^']+)'", result.read())
 	
 	if matches is None:
-		raise ResolverError("No playlist was found on the given URL; the Sockshare server for this file may be in maintenance mode, or the given URL may not be a video file. The Sockshare resolver currently only supports video links.")
+		raise ResolverError("No playlist was found on the given URL; the SockShare server for this file may be in maintenance mode, or the given URL may not be a video file. The SockShare resolver currently only supports video links.")
 	
 	playlist = matches.group(1)
 	
@@ -42,7 +42,7 @@ def resolve(url):
 	matches = re.search("url=\"([^\"]+)\" type=\"video\/x-flv\"", browser.response().read())
 	
 	if matches is None:
-		raise ResolverError("The playlist file does not contain any video URLs. The Sockshare resolver currently only supports video links.")
+		raise ResolverError("The playlist file does not contain any video URLs. The SockShare resolver currently only supports video links.")
 	
 	video_file = matches.group(1)
 	
