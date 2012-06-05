@@ -69,7 +69,7 @@ def resolve(url):
 		stream_pool['video_%s_%s' % (video_quality, video_format)] = video_url
 	
 	try:
-		video_title = re.search('<meta property="og:title" content="([^"]*)">', contents).groups(1)
+		video_title = urllib.unquote(re.search('<meta property="og:title" content="([^"]*)">', contents).groups(1))
 	except:
 		raise ResolverError("Could not find the video title.")
 	
