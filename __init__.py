@@ -12,10 +12,15 @@ def resolve(url):
 		return {}
 
 def recurse(url):
+	previous_result = {}
+	
 	while True:
 		result = resolve(url)
 		
-		if 'url' not in result:
+		if result == {}:
+			return previous_result
+		elif 'url' not in result:
 			return result
 		
 		url = result['url']
+		previous_result = result
