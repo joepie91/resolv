@@ -10,6 +10,8 @@ def resolve(url):
 		return onechannel.resolve(url)
 	elif re.match("https?:\/\/(www\.)?youtube\.com\/watch\?", url) is not None:
 		return youtube.resolve(url)
+	elif re.match("https?:\/\/(www\.)?filebox\.com\/[a-zA-Z0-9]+", url) is not None:
+		return filebox.resolve(url)
 	else:
 		return {}
 
