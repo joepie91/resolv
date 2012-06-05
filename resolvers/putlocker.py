@@ -7,7 +7,7 @@ def resolve(url):
 	except ImportError:
 		raise ResolverError("The Python mechanize module is required to resolve PutLocker URLs.")
 	
-	matches = re.search("https?:\/\/(www\.)?putlocker.com\/(file|embed)\/([A-Z0-9]+)", url)
+	matches = re.search("https?:\/\/(www\.)?putlocker\.com\/(file|embed)\/([A-Z0-9]+)", url)
 
 	if matches is None:
 		raise ResolverError("The provided URL is not a valid PutLocker URL.")
