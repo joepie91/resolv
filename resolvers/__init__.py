@@ -4,3 +4,4 @@ from sockshare import *
 from onechannel import *
 from youtube import *
 from filebox import *
+from pastebin import *

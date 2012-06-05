@@ -12,6 +12,8 @@ def resolve(url):
 		return youtube.resolve(url)
 	elif re.match("https?:\/\/(www\.)?filebox\.com\/[a-zA-Z0-9]+", url) is not None:
 		return filebox.resolve(url)
+	elif re.match("https?:\/\/(www\.)?pastebin\.com\/[a-zA-Z0-9]+", url) is not None:
+		return pastebin.resolve(url)
 	else:
 		return {}
 
