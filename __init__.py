@@ -6,5 +6,7 @@ def resolve(url):
 		return putlocker.resolve(url)
 	elif re.match("https?:\/\/(www\.)?sockshare\.com", url) is not None:
 		return sockshare.resolve(url)
+	elif re.match("https?:\/\/(www\.)?1channel\.ch\/external\.php", url) is not None:
+		return onechannel.resolve(url)
 	else:
 		return {}
