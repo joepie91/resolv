@@ -68,4 +68,9 @@ def resolve(url):
 		
 		stream_pool['video_%s_%s' % (video_quality, video_format)] = video_url
 	
-	return stream_pool
+	try:
+		video_title = re.search('<meta property="og:title" content="([^"]*)">', contents).groups(1)
+	except:
+		raise ResolverError("Could not find the video title.")
+	
+	return { 'title': video_title, 'urls': stream_pool }
