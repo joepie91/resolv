@@ -8,6 +8,8 @@ def resolve(url):
 		return sockshare.resolve(url)
 	elif re.match("https?:\/\/(www\.)?1channel\.ch\/external\.php", url) is not None:
 		return onechannel.resolve(url)
+	elif re.match("https?:\/\/(www\.)?youtube\.com\/watch\?", url) is not None:
+		return youtube.resolve(url)
 	else:
 		return {}
 
