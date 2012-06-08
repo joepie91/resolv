@@ -7,5 +7,5 @@ setup(name='resolv',
       author_email='resolv@cryto.net',
       url='http://cryto.net/resolv',
       packages=['resolv', 'resolv.resolvers'],
-      provides='resolv'
+      provides=['resolv']
      )

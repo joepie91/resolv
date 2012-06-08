@@ -1,3 +1,9 @@
+from HTMLParser import HTMLParser
+
+import sys
+reload(sys)
+sys.setdefaultencoding("UTF-8")
+
 class ResolverError(Exception):
 	def __init__(self, value):
 		self.val = value
@@ -6,9 +12,4 @@ class ResolverError(Exception):
 		return repr(self.val)
 
 def unescape(s):
-	s = s.replace("&lt;", "<")
-	s = s.replace("&gt;", ">")
-	s = s.replace("&quot;", '"')
-	s = s.replace("&apos;", "'")
-	s = s.replace("&amp;", "&")
-	return s
+	return HTMLParser.unescape.__func__(HTMLParser, s)
