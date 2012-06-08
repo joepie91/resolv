@@ -1,11 +1,11 @@
 import re, urllib, urllib2
-from resolv.shared import ResolverError, unescape
+import resolv
 
 def resolve(url):
 	try:
 		contents = urllib2.urlopen(url).read()
 	except:
-		raise ResolverError("Could not retrieve the specified URL.")
+		raise resolv.ResolverError("Could not retrieve the specified URL.")
 	
 	map_start = "url_encoded_fmt_stream_map="
 	map_end = "\\u0026amp;"
@@ -14,19 +14,19 @@ def resolve(url):
 		pos_start = contents.index(map_start) + len(map_start) + 6
 		snippet = contents[pos_start:]
 	except ValueError:
-		raise ResolverError("The starting position for the YouTube player configuration could not be found. Is the URL really a valid video page?")
+		raise resolv.ResolverError("The starting position for the YouTube player configuration could not be found. Is the URL really a valid video page?")
 	
 	try:
 		pos_end = snippet.index(map_end)
 		stream_map = snippet[:pos_end]
 	except ValueError:
-		raise ResolverError("The ending position for the YouTube player configuration could not be found.")
+		raise resolv.ResolverError("The ending position for the YouTube player configuration could not be found.")
 	
 	try:
 		stream_map = urllib.unquote(stream_map)
 		streams = stream_map.split(',url=')
 	except:
-		raise ResolverError("The YouTube player configuration is corrupted.")
+		raise resolv.ResolverError("The YouTube player configuration is corrupted.")
 	
 	stream_pool = []
 	
@@ -34,7 +34,7 @@ def resolve(url):
 		fields = stream.split('&')
 		
 		if len(fields) < 5:
-			raise ResolverError("The amount of fields in the YouTube player configuration is incorrect.")
+			raise resolv.ResolverError("The amount of fields in the YouTube player configuration is incorrect.")
 		
 		video_url = urllib.unquote(fields[0])
 		quality = fields[1].split("=")[1]
@@ -83,6 +83,6 @@ def resolve(url):
 	try:
 		video_title = unescape(re.search('<meta property="og:title" content="([^"]*)">', contents).group(1))
 	except:
-		raise ResolverError("Could not find the video title.")
+		raise resolv.ResolverError("Could not find the video title.")
 	
 	return { 'title': video_title, 'videos': stream_pool }

@@ -1,6 +1,12 @@
-import re
+import re, sys
 from resolvers import *
+from HTMLParser import HTMLParser
 
+# Fix encoding to deal with UTF-8 page contents
+reload(sys)
+sys.setdefaultencoding("UTF-8")
+
+# Main functions
 def resolve(url):
 	if re.match("https?:\/\/(www\.)?putlocker\.com", url) is not None:
 		return putlocker.resolve(url)
@@ -32,3 +38,15 @@ def recurse(url):
 		
 		url = result['url']
 		previous_result = result
+
+# Exception classes
+class ResolverError(Exception):
+	def __init__(self, value):
+		self.val = value
+		
+	def __str__(self):
+		return repr(self.val)
+
+# Utility functions
+def unescape(s):
+	return HTMLParser.unescape.__func__(HTMLParser, s)
