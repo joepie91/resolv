@@ -52,4 +52,11 @@ def resolve(url):
 	except:
 		raise ResolverError("Could not find the video title.")
 	
-	return { 'title': video_title, 'videos': { 'video': video_file } }
+	stream_dict = {
+		'url'		: video_file,
+		'quality'	: "unknown",
+		'priority'	: 1,
+		'format'	: "unknown"
+	}
+	
+	return { 'title': video_title, 'videos': [stream_dict] }

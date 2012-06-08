@@ -21,7 +21,14 @@ def resolve(url):
 	
 	video_file = matches.group(1)
 	
-	return { 'title': "", 'videos': { 'video': video_file } }
+	stream_dict = {
+		'url'		: video_file,
+		'quality'	: "unknown",
+		'priority'	: 1,
+		'format'	: "unknown"
+	}
+	
+	return { 'title': "", 'videos': [stream_dict] }
 	
 def resolve2(url):
 	# This is a fallback function in case no video could be found through the resolve() method.

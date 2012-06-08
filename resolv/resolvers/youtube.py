@@ -28,7 +28,7 @@ def resolve(url):
 	except:
 		raise ResolverError("The YouTube player configuration is corrupted.")
 	
-	stream_pool = {}
+	stream_pool = []
 	
 	for stream in streams:
 		fields = stream.split('&')
@@ -55,18 +55,30 @@ def resolve(url):
 		
 		if quality == "small":
 			video_quality = "240p"
+			video_priority = 5
 		elif quality == "medium":
 			video_quality = "360p"
+			video_priority = 4
 		elif quality == "large":
 			video_quality = "480p"
+			video_priority = 3
 		elif quality == "hd720":
 			video_quality = "720p"
+			video_priority = 2
 		elif quality == "hd1080":
 			video_quality = "1080p"
+			video_priority = 1
 		else:
 			video_quality = "unknown"
 		
-		stream_pool['video_%s_%s' % (video_quality, video_format)] = video_url
+		stream_dict = {
+			'url'		: video_url,
+			'quality'	: video_quality,
+			'priority'	: video_priority,
+			'format'	: video_format
+		}
+		
+		stream_pool.append(stream_dict)
 	
 	try:
 		video_title = unescape(re.search('<meta property="og:title" content="([^"]*)">', contents).group(1))
