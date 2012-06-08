@@ -19,4 +19,10 @@ def resolve(url):
 	except:
 		raise ResolverError("Could not find the download title.")
 	
-	return { 'title': file_title, 'files': { 'file': file_url } }
+	file_dict = {
+		'url'		: file_url,
+		'priority'	: 1,
+		'format'	: "unknown"
+	}
+	
+	return { 'title': file_title, 'files': [file_dict] }

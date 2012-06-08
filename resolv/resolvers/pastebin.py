@@ -21,4 +21,10 @@ def resolve(url):
 	
 	paste_title = unescape(matches.group(1))
 	
-	return { 'title': paste_title, 'files': { 'file': "http://pastebin.com/download.php?i=%s" % paste_id } }
+	file_dict = {
+		'url'		: "http://pastebin.com/download.php?i=%s" % paste_id,
+		'priority'	: 1,
+		'format'	: "text"
+	}
+	
+	return { 'title': paste_title, 'files': [file_dict] }
