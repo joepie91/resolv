@@ -1,5 +1,5 @@
 import re
-from resolv.shared import ResolverError
+from resolv.shared import ResolverError, unescape
 
 def resolve(url):
 	try:
@@ -48,7 +48,7 @@ def resolve(url):
 	video_file = matches.group(1)
 	
 	try:
-		video_title = urllib.unquote(re.search('<a href="\/file\/[^"]+"[^>]*><strong>([^<]*)<\/strong><\/a>', page).group(1))
+		video_title = unescape(re.search('<a href="\/file\/[^"]+"[^>]*><strong>([^<]*)<\/strong><\/a>', page).group(1))
 	except:
 		raise ResolverError("Could not find the video title.")
 	

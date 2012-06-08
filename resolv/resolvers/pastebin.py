@@ -1,5 +1,5 @@
 import re, urllib, urllib2
-from resolv.shared import ResolverError
+from resolv.shared import ResolverError, unescape
 
 def resolve(url):
 	matches = re.search("https?:\/\/(www\.)?pastebin\.com\/([a-zA-Z0-9]+)", url)
@@ -19,6 +19,6 @@ def resolve(url):
 	if matches is None:
 		raise ResolverError("The provided URL is not a valid paste.")
 	
-	paste_title = urllib.unquote(matches.group(1))
+	paste_title = unescape(matches.group(1))
 	
 	return { 'title': paste_title, 'files': { 'file': "http://pastebin.com/download.php?i=%s" % paste_id } }
