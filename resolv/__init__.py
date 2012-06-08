@@ -14,6 +14,8 @@ def resolve(url):
 		return filebox.resolve(url)
 	elif re.match("https?:\/\/(www\.)?pastebin\.com\/[a-zA-Z0-9]+", url) is not None:
 		return pastebin.resolve(url)
+	elif re.match("https?:\/\/(www\.)?mediafire\.com\/\?[a-z0-9]+", url) is not None:
+		return mediafire.resolve(url)
 	else:
 		return {}
 

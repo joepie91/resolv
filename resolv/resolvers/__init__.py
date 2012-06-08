@@ -5,3 +5,4 @@ from onechannel import *
 from youtube import *
 from filebox import *
 from pastebin import *
+from mediafire import *
