@@ -65,11 +65,19 @@ class Captcha():
 	image = None
 	audio = None
 	text = None
+	task = None
 	
-	def __init__(image=None, audio=None, text=None):
+	def __init__(self, task, image=None, audio=None, text=None):
 		self.image = image
 		self.audio = audio
 		self.text = text
+		self.task = task
+	
+	def get_image(self):
+		return self.task.fetch_page(self.image)
+	
+	def get_audio(self):
+		return self.task.fetch_page(self.audio)
 
 def unescape(s):
 	return HTMLParser.unescape.__func__(HTMLParser, s)
