@@ -1,5 +1,5 @@
 from HTMLParser import HTMLParser
-import cookielib, urllib2
+import cookielib, urllib, urllib2
 
 import sys
 reload(sys)
@@ -22,6 +22,7 @@ class Task():
 	url = ""
 	result_type = "none"
 	extra_headers = {}
+	last_url = ""
 	
 	def __init__(self, url):
 		self.cookiejar = cookielib.CookieJar()
@@ -42,7 +43,23 @@ class Task():
 		return self
 	
 	def fetch_page(self, url):
-		return self.opener.open(url).read()
+		request = urllib2.Request(url)
+		
+		if self.last_url != "":
+			request.add_header("Referer", self.last_url)
+			
+		self.last_url = url
+		return self.opener.open(request).read()
+	
+	def post_page(self, url, data):
+		payload = urllib.urlencode(data)
+		request = urllib2.Request(url, payload)
+		
+		if self.last_url != "":
+			request.add_header("Referer", self.last_url)
+			
+		self.last_url = url
+		return self.opener.open(request).read()
 
 class Captcha():
 	image = ""
