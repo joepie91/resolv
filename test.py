@@ -37,7 +37,7 @@ options = vars(args)
 to_test = {}
 
 if len(options['suites']) == 0:
-	for suite in suites:
+	for key, suite in suites.iteritems():
 		for description, url in suite.iteritems():
 			to_test[description] = url
 else:
