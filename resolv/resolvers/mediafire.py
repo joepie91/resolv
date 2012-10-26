@@ -11,10 +11,28 @@ class MediafireTask(Task):
 			self.state = "failed"
 			raise ResolverError("Could not retrieve the specified URL.")
 		
+		if '<form name="form_password"' in contents:
+			# The file is password-protected
+			self.state = "need_password"
+			return self
+		else:
+			return self._find_link(contents)
+	
+	def verify_password(self, password):
+		contents = self.post_page(self.url, {'downloadp': password})
+		
+		if '<form name="form_password"' in contents:
+			self.state = "password_invalid"
+			return self
+		else:
+			return self._find_link(contents)
+
+	def _find_link(self, contents):
 		matches = re.search('kNO = "([^"]+)";', contents)
 		
 		if matches is None:
 			self.state = "failed"
+			print contents
 			raise ResolverError("No download was found on the given URL; the server for this file may be in maintenance mode, or the given URL may not be valid. It is also possible that you have been blocked - CAPTCHA support is not yet present.")
 		
 		file_url = matches.group(1)
