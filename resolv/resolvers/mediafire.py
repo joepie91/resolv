@@ -4,6 +4,10 @@ from resolv.shared import ResolverError, unescape, Task
 class MediafireTask(Task):
 	result_type = "file"
 	
+	name = "MediaFire"
+	author = "Sven Slootweg"
+	author_url = "http://cryto.net/~joepie91"
+	
 	def run(self):
 		try:
 			contents = self.fetch_page(self.url)
@@ -45,6 +49,7 @@ class MediafireTask(Task):
 		
 		file_dict = {
 			'url'		: file_url,
+			'method'	: "GET",
 			'priority'	: 1,
 			'format'	: "unknown"
 		}

@@ -4,6 +4,10 @@ from resolv.shared import ResolverError, unescape, Task
 class YoutubeTask(Task):
 	result_type = "video"
 	
+	name = "YouTube"
+	author = "Sven Slootweg"
+	author_url = "http://cryto.net/~joepie91"
+	
 	extra_headers = {
 		'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.7',
 		'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',

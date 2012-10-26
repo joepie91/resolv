@@ -4,6 +4,10 @@ from resolv.shared import ResolverError, Task
 class FileboxTask(Task):
 	result_type = "video"
 	
+	name = "Filebox.com"
+	author = "Sven Slootweg"
+	author_url = "http://cryto.net/~joepie91"
+	
 	def run(self):
 		matches = re.search("https?:\/\/(www\.)?filebox\.com\/([a-zA-Z0-9]+)", self.url)
 		
@@ -29,6 +33,7 @@ class FileboxTask(Task):
 		
 		stream_dict = {
 			'url'		: video_file,
+			'method'	: "GET",
 			'quality'	: "unknown",
 			'priority'	: 1,
 			'format'	: "unknown"

@@ -4,6 +4,10 @@ from resolv.shared import ResolverError, unescape, Task
 class PutlockerTask(Task):
 	result_type = "video"
 	
+	name = "PutLocker"
+	author = "Sven Slootweg"
+	author_url = "http://cryto.net/~joepie91"
+	
 	def run(self):
 		try:
 			import mechanize
@@ -64,6 +68,7 @@ class PutlockerTask(Task):
 		
 		stream_dict = {
 			'url'		: video_file,
+			'method'	: "GET",
 			'quality'	: "unknown",
 			'priority'	: 1,
 			'format'	: "unknown"

@@ -4,6 +4,10 @@ from resolv.shared import ResolverError, unescape, Task
 class PastebinTask(Task):
 	result_type = "text"
 	
+	name = "Pastebin"
+	author = "Sven Slootweg"
+	author_url = "http://cryto.net/~joepie91"
+	
 	def run(self):
 		matches = re.search("https?:\/\/(www\.)?pastebin\.com\/([a-zA-Z0-9]+)", self.url)
 		
@@ -29,6 +33,7 @@ class PastebinTask(Task):
 		
 		resolved = {
 			'url'		: "http://pastebin.com/download.php?i=%s" % paste_id,
+			'method'	: "GET",
 			'priority'	: 1,
 			'format'	: "text"
 		}

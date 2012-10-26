@@ -4,6 +4,10 @@ from resolv.shared import ResolverError, Task
 class OneChannelTask(Task):
 	result_type = "url"
 	
+	name = "1channel"
+	author = "Sven Slootweg"
+	author_url = "http://cryto.net/~joepie91"
+	
 	def run(self):
 		matches = re.search("https?:\/\/(www\.)?1channel\.ch\/external\.php\?.*url=([^&]+)", self.url)
 
