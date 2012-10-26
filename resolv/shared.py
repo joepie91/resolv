@@ -60,6 +60,22 @@ class Task():
 			
 		self.last_url = url
 		return self.opener.open(request).read()
+		
+	def verify_password(password):
+		# Has to be overridden by inherited classes.
+		pass
+		
+	def verify_image_captcha(solution):
+		# Has to be overridden by inherited classes.
+		pass
+		
+	def verify_audio_captcha(solution):
+		# Has to be overridden by inherited classes.
+		pass
+		
+	def verify_text_captcha(solution):
+		# Has to be overridden by inherited classes.
+		pass
 
 class Captcha():
 	image = None
