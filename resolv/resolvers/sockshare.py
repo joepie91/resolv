@@ -1,62 +1,78 @@
 import re
-from resolv.shared import ResolverError, unescape
+from resolv.shared import ResolverError, unescape, Task
 
-def resolve(url):
-	try:
-		import mechanize
-	except ImportError:
-		raise ResolverError("The Python mechanize module is required to resolve SockShare URLs.")
+class SockshareTask(Task):
+	result_type = "video"
 	
-	matches = re.search("https?:\/\/(www\.)?sockshare\.com\/(file|embed)\/([A-Z0-9]+)", url)
-
-	if matches is None:
-		raise ResolverError("The provided URL is not a valid SockShare URL.")
-	
-	video_id = matches.group(3)
-	
-	try:
-		browser = mechanize.Browser()
-		browser.set_handle_robots(False)
-		browser.open("http://sockshare.com/embed/%s" % video_id)
-	except:
-		raise ResolverError("The SockShare site could not be reached.")
-	
-	try:
-		browser.select_form(nr=0)
-		result = browser.submit()
-		page = result.read()
-	except Exception, e:
-		raise ResolverError("The file was removed, or the URL is incorrect.")
+	def run(self):
+		try:
+			import mechanize
+		except ImportError:
+			self.state = "failed"
+			raise ResolverError("The Python mechanize module is required to resolve Sockshare URLs.")
 		
-	matches = re.search("playlist: '([^']+)'", page)
-	
-	if matches is None:
-		raise ResolverError("No playlist was found on the given URL; the SockShare server for this file may be in maintenance mode, or the given URL may not be a video file. The SockShare resolver currently only supports video links.")
-	
-	playlist = matches.group(1)
-	
-	try:
-		browser.open("http://www.sockshare.com%s" % playlist)
-	except:
-		raise ResolverError("The playlist file for the given URL could not be loaded.")
-	
-	matches = re.search("url=\"([^\"]+)\" type=\"video\/x-flv\"", browser.response().read())
-	
-	if matches is None:
-		raise ResolverError("The playlist file does not contain any video URLs. The SockShare resolver currently only supports video links.")
-	
-	video_file = matches.group(1)
-	
-	try:
-		video_title = unescape(re.search('<a href="\/file\/[^"]+"[^>]*><strong>([^<]*)<\/strong><\/a>', page).group(1))
-	except:
-		raise ResolverError("Could not find the video title.")
-	
-	stream_dict = {
-		'url'		: video_file,
-		'quality'	: "unknown",
-		'priority'	: 1,
-		'format'	: "unknown"
-	}
-	
-	return { 'title': video_title, 'videos': [stream_dict] }
+		matches = re.search("https?:\/\/(www\.)?sockshare\.com\/(file|embed)\/([A-Z0-9]+)", self.url)
+
+		if matches is None:
+			self.state = "invalid"
+			raise ResolverError("The provided URL is not a valid Sockshare URL.")
+		
+		video_id = matches.group(3)
+		
+		try:
+			browser = mechanize.Browser()
+			browser.set_handle_robots(False)
+			browser.open("http://sockshare.com/embed/%s" % video_id)
+		except:
+			self.state = "failed"
+			raise ResolverError("The Sockshare site could not be reached.")
+		
+		try:
+			browser.select_form(nr=0)
+			result = browser.submit()
+			page = result.read()
+		except Exception, e:
+			self.state = "nonexistent"
+			raise ResolverError("The file was removed, or the URL is incorrect.")
+			
+		matches = re.search("playlist: '([^']+)'", page)
+		
+		if matches is None:
+			raise ResolverError("No playlist was found on the given URL; the Sockshare server for this file may be in maintenance mode, or the given URL may not be a video file. The Sockshare resolver currently only supports video links.")
+		
+		playlist = matches.group(1)
+		
+		try:
+			browser.open("http://www.sockshare.com%s" % playlist)
+		except:
+			self.state = "failed"
+			raise ResolverError("The playlist file for the given URL could not be loaded.")
+		
+		matches = re.search("url=\"([^\"]+)\" type=\"video\/x-flv\"", browser.response().read())
+		
+		if matches is None:
+			self.state = "failed"
+			raise ResolverError("The playlist file does not contain any video URLs. The Sockshare resolver currently only supports video links.")
+		
+		video_file = matches.group(1)
+		
+		try:
+			video_title = unescape(re.search('<a href="\/file\/[^"]+"[^>]*><strong>([^<]*)<\/strong><\/a>', page).group(1))
+		except:
+			self.state = "failed"
+			raise ResolverError("Could not find the video title.")
+		
+		stream_dict = {
+			'url'		: video_file,
+			'quality'	: "unknown",
+			'priority'	: 1,
+			'format'	: "unknown"
+		}
+		
+		self.results = {
+			'title': video_title,
+			'videos': [stream_dict]
+		}
+		
+		self.state = "finished"
+		return self
