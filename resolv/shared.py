@@ -62,12 +62,14 @@ class Task():
 		return self.opener.open(request).read()
 
 class Captcha():
-	image = ""
-	audio = ""
+	image = None
+	audio = None
+	text = None
 	
-	def __init__(image="", audio=""):
+	def __init__(image=None, audio=None, text=None):
 		self.image = image
 		self.audio = audio
+		self.text = text
 
 def unescape(s):
 	return HTMLParser.unescape.__func__(HTMLParser, s)
