@@ -1,6 +1,8 @@
 import re
 import resolvers
 
+from resolv.shared import ResolverError
+
 def resolve(url):
 	if re.match("https?:\/\/(www\.)?putlocker\.com", url) is not None:
 		task = resolvers.PutlockerTask(url)
@@ -24,7 +26,7 @@ def resolve(url):
 		task = resolvers.MediafireTask(url)
 		return task.run()
 	else:
-		return {}
+		raise ResolverError("No suitable resolver found for %s" % url)
 
 def recurse(url):
 	previous_result = {}
@@ -32,7 +34,7 @@ def recurse(url):
 	while True:
 		result = resolve(url)
 		
-		if result.state != "finished":
+		if result.state == "failed":
 			return previous_result
 		elif result.result_type != "url":
 			return result
