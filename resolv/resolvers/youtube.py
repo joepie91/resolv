@@ -85,11 +85,12 @@ class YoutubeTask(Task):
 				video_priority = 1
 			else:
 				video_quality = "unknown"
-				video_priority = 0
+				video_priority = 10
 				print "UNKNOWN: %s" % quality
 			
 			stream_dict = {
 				'url'		: video_url,
+				'method'	: "GET",
 				'quality'	: video_quality,
 				'priority'	: video_priority,
 				'format'	: video_format,
