@@ -1,5 +1,5 @@
 import re, urllib, urllib2, urlparse
-from resolv.shared import ResolverError, unescape, Task
+from resolv.shared import ResolverError, TechnicalError, unescape, Task
 
 class YoutubeTask(Task):
 	result_type = "video"
@@ -19,7 +19,11 @@ class YoutubeTask(Task):
 			contents = self.fetch_page(self.url)
 		except urllib2.URLError, e:
 			self.state = "failed"
-			raise ResolverError("Could not retrieve the specified URL.")
+			raise TechnicalError("Could not retrieve the specified URL.")
+		
+		if '<meta property="og:video:type"' not in contents:
+			self.state = "invalid"
+			raise ResolverError("The specified URL is not a valid YouTube video.")
 		
 		map_start = "url_encoded_fmt_stream_map="
 		map_end = "\\u0026amp;"
@@ -29,21 +33,21 @@ class YoutubeTask(Task):
 			snippet = contents[pos_start:]
 		except ValueError:
 			self.state = "failed"
-			raise ResolverError("The starting position for the YouTube player configuration could not be found. Is the URL really a valid video page?")
+			raise TechnicalError("The starting position for the YouTube player configuration could not be found. Is the URL really a valid video page?")
 		
 		try:
 			pos_end = snippet.index(map_end)
 			stream_map = snippet[:pos_end]
 		except ValueError:
 			self.state = "failed"
-			raise ResolverError("The ending position for the YouTube player configuration could not be found.")
+			raise TechnicalError("The ending position for the YouTube player configuration could not be found.")
 		
 		try:
 			stream_map = urllib.unquote(stream_map)
 			streams = stream_map.split(',')
 		except:
 			self.state = "failed"
-			raise ResolverError("The YouTube player configuration is corrupted.")
+			raise TechnicalError("The YouTube player configuration is corrupted.")
 		
 		stream_pool = []
 		
@@ -52,7 +56,7 @@ class YoutubeTask(Task):
 			
 			if len(fields) < 6:
 				self.state = "failed"
-				raise ResolverError("The amount of fields in the YouTube player configuration is incorrect.")
+				raise TechnicalError("The amount of fields in the YouTube player configuration is incorrect.")
 			
 			signature = fields['sig'][0]
 			video_url = "%s&signature=%s" % (fields['url'][0], signature)
@@ -111,7 +115,7 @@ class YoutubeTask(Task):
 			video_title = unescape(re.search('<meta property="og:title" content="([^"]*)">', contents).group(1))
 		except:
 			self.state = "failed"
-			raise ResolverError("Could not find the video title.")
+			raise TechnicalError("Could not find the video title.")
 		
 		self.results = {
 			'title': video_title,

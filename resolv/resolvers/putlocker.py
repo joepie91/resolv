@@ -1,5 +1,5 @@
 import re
-from resolv.shared import ResolverError, unescape, Task
+from resolv.shared import ResolverError, TechnicalError, unescape, Task
 
 class PutlockerTask(Task):
 	result_type = "video"
@@ -13,7 +13,7 @@ class PutlockerTask(Task):
 			import mechanize
 		except ImportError:
 			self.state = "failed"
-			raise ResolverError("The Python mechanize module is required to resolve PutLocker URLs.")
+			raise TechnicalError("The Python mechanize module is required to resolve PutLocker URLs.")
 		
 		matches = re.search("https?:\/\/(www\.)?putlocker\.com\/(file|embed)\/([A-Z0-9]+)", self.url)
 
@@ -29,7 +29,7 @@ class PutlockerTask(Task):
 			browser.open("http://putlocker.com/embed/%s" % video_id)
 		except:
 			self.state = "failed"
-			raise ResolverError("The PutLocker site could not be reached.")
+			raise TechnicalError("The PutLocker site could not be reached.")
 		
 		try:
 			browser.select_form(nr=0)
@@ -42,6 +42,7 @@ class PutlockerTask(Task):
 		matches = re.search("playlist: '([^']+)'", page)
 		
 		if matches is None:
+			self.state = "failed"
 			raise ResolverError("No playlist was found on the given URL; the PutLocker server for this file may be in maintenance mode, or the given URL may not be a video file. The PutLocker resolver currently only supports video links.")
 		
 		playlist = matches.group(1)
@@ -50,7 +51,7 @@ class PutlockerTask(Task):
 			browser.open("http://www.putlocker.com%s" % playlist)
 		except:
 			self.state = "failed"
-			raise ResolverError("The playlist file for the given URL could not be loaded.")
+			raise TechnicalError("The playlist file for the given URL could not be loaded.")
 		
 		matches = re.search("url=\"([^\"]+)\" type=\"video\/x-flv\"", browser.response().read())
 		
@@ -64,7 +65,7 @@ class PutlockerTask(Task):
 			video_title = unescape(re.search('<a href="\/file\/[^"]+"[^>]*><strong>([^<]*)<\/strong><\/a>', page).group(1))
 		except:
 			self.state = "failed"
-			raise ResolverError("Could not find the video title.")
+			raise TechnicalError("Could not find the video title.")
 		
 		stream_dict = {
 			'url'		: video_file,

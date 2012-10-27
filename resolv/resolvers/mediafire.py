@@ -1,5 +1,5 @@
 import re, urllib2
-from resolv.shared import ResolverError, unescape, Task
+from resolv.shared import ResolverError, TechnicalError, unescape, Task
 
 class MediafireTask(Task):
 	result_type = "file"
@@ -13,7 +13,7 @@ class MediafireTask(Task):
 			contents = self.fetch_page(self.url)
 		except urllib2.URLError, e:
 			self.state = "failed"
-			raise ResolverError("Could not retrieve the specified URL.")
+			raise TechnicalError("Could not retrieve the specified URL.")
 		
 		if '<form name="form_password"' in contents:
 			# The file is password-protected
@@ -45,7 +45,7 @@ class MediafireTask(Task):
 			file_title = unescape(re.search('<title>([^<]+)<\/title>', contents).group(1))
 		except:
 			self.state = "failed"
-			raise ResolverError("Could not find the download title.")
+			raise TechnicalError("Could not find the download title.")
 		
 		file_dict = {
 			'url'		: file_url,

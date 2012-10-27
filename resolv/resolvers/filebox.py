@@ -1,5 +1,5 @@
 import re, time, urllib2
-from resolv.shared import ResolverError, Task
+from resolv.shared import ResolverError, TechnicalError, Task
 
 class FileboxTask(Task):
 	result_type = "video"
@@ -21,7 +21,7 @@ class FileboxTask(Task):
 			contents = self.fetch_page("http://www.filebox.com/embed-%s-970x543.html" % video_id)
 		except urllib2.URLError, e:
 			self.state = "failed"
-			raise ResolverError("Could not retrieve the video page.")
+			raise TechnicalError("Could not retrieve the video page.")
 		
 		matches = re.search("url: '([^']+)',", contents)
 		

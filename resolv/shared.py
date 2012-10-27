@@ -11,6 +11,13 @@ class ResolverError(Exception):
 		
 	def __str__(self):
 		return repr(self.val)
+		
+class TechnicalError(Exception):
+	def __init__(self, value):
+		self.val = value
+		
+	def __str__(self):
+		return repr(self.val)
 
 class Task():
 	captcha = None
