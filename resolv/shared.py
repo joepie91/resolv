@@ -1,5 +1,5 @@
 from HTMLParser import HTMLParser
-import cookielib, urllib, urllib2
+import cookielib, urllib, urllib2, re
 
 import sys
 reload(sys)
@@ -104,3 +104,24 @@ class Captcha():
 
 def unescape(s):
 	return HTMLParser.unescape.__func__(HTMLParser, s)
+
+def str_base(num, base):
+	# Thanks to http://code.activestate.com/recipes/65212/#c7
+	return ((num == 0) and  "0" ) or ( str_base(num // base, base).lstrip("0") + "0123456789abcdefghijklmnopqrstuvwxyz"[num % base])
+
+def unpack_js(packed):
+	positions = re.search("return p\}\('(.+[^\\\\])',", packed).group(1)
+	base, counter, strings = re.search(",([0-9]+),([0-9]+),'([^']+)'", packed).groups(1)
+
+	counter = int(counter)
+	base = int(base)
+	strings = strings.split("|")
+
+	for i in reversed(xrange(0, int(counter))):
+		target = str_base(i, base)
+		positions = re.sub(r"\b%s\b" % target, strings[i], positions)
+	
+	# Fix escaped apostrophes.
+	positions = re.sub(r"(?<!\\)\\'", "'", positions)
+	
+	return positions
