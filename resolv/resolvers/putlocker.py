@@ -1,5 +1,5 @@
 import re
-import resolv
+from resolv.shared import ResolverError, unescape
 
 def resolve(url):
 	try:
@@ -10,7 +10,7 @@ def resolve(url):
 	matches = re.search("https?:\/\/(www\.)?putlocker\.com\/(file|embed)\/([A-Z0-9]+)", url)
 
 	if matches is None:
-		raise resolv.ResolverError("The provided URL is not a valid PutLocker URL.")
+		raise ResolverError("The provided URL is not a valid PutLocker URL.")
 	
 	video_id = matches.group(3)
 	
@@ -19,38 +19,38 @@ def resolve(url):
 		browser.set_handle_robots(False)
 		browser.open("http://putlocker.com/embed/%s" % video_id)
 	except:
-		raise resolv.ResolverError("The PutLocker site could not be reached.")
+		raise ResolverError("The PutLocker site could not be reached.")
 	
 	try:
 		browser.select_form(nr=0)
 		result = browser.submit()
 		page = result.read()
 	except Exception, e:
-		raise resolv.ResolverError("The file was removed, or the URL is incorrect.")
+		raise ResolverError("The file was removed, or the URL is incorrect.")
 		
 	matches = re.search("playlist: '([^']+)'", page)
 	
 	if matches is None:
-		raise resolv.ResolverError("No playlist was found on the given URL; the PutLocker server for this file may be in maintenance mode, or the given URL may not be a video file. The PutLocker resolver currently only supports video links.")
+		raise ResolverError("No playlist was found on the given URL; the PutLocker server for this file may be in maintenance mode, or the given URL may not be a video file. The PutLocker resolver currently only supports video links.")
 	
 	playlist = matches.group(1)
 	
 	try:
 		browser.open("http://www.putlocker.com%s" % playlist)
 	except:
-		raise resolv.ResolverError("The playlist file for the given URL could not be loaded.")
+		raise ResolverError("The playlist file for the given URL could not be loaded.")
 	
 	matches = re.search("url=\"([^\"]+)\" type=\"video\/x-flv\"", browser.response().read())
 	
 	if matches is None:
-		raise resolv.ResolverError("The playlist file does not contain any video URLs. The PutLocker resolver currently only supports video links.")
+		raise ResolverError("The playlist file does not contain any video URLs. The PutLocker resolver currently only supports video links.")
 	
 	video_file = matches.group(1)
 	
 	try:
-		video_title = resolv.unescape(re.search('<a href="\/file\/[^"]+"[^>]*><strong>([^<]*)<\/strong><\/a>', page).group(1))
+		video_title = unescape(re.search('<a href="\/file\/[^"]+"[^>]*><strong>([^<]*)<\/strong><\/a>', page).group(1))
 	except:
-		raise resolv.ResolverError("Could not find the video title.")
+		raise ResolverError("Could not find the video title.")
 	
 	stream_dict = {
 		'url'		: video_file,

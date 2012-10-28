@@ -1,23 +1,23 @@
 import re, urllib, urllib2
-import resolv
+from resolv.shared import ResolverError, unescape
 
 def resolve(url):
 	matches = re.search("https?:\/\/(www\.)?pastebin\.com\/([a-zA-Z0-9]+)", url)
 	
 	if matches is None:
-		raise resolv.ResolverError("The provided URL is not a valid Pastebin URL.")
+		raise ResolverError("The provided URL is not a valid Pastebin URL.")
 	
 	paste_id = matches.group(2)
 	
 	try:
 		contents = urllib2.urlopen(url).read()
 	except:
-		raise resolv.ResolverError("Could not retrieve the specified URL. The specified paste may not exist.")
+		raise ResolverError("Could not retrieve the specified URL. The specified paste may not exist.")
 	
 	matches = re.search("<h1>([^<]+)</h1>", contents)
 	
 	if matches is None:
-		raise resolv.ResolverError("The provided URL is not a valid paste.")
+		raise ResolverError("The provided URL is not a valid paste.")
 	
 	paste_title = unescape(matches.group(1))
 	
