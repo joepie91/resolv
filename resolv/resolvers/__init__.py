@@ -6,3 +6,6 @@ from youtube import *
 from filebox import *
 from pastebin import *
 from mediafire import *
+from vidxden import *
+from vidbux import *
+from filenuke import *
