@@ -29,6 +29,9 @@ suites = {
 	},
 	'vidbux': {
 		"VidBux": "http://www.vidbux.com/5ovunjri3fqq"
+	},
+	'filenuke': {
+		"Filenuke": "http://filenuke.com/osk9yi7vbtq0"
 	}
 }
 

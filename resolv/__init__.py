@@ -25,6 +25,9 @@ def resolve(url):
 	elif re.match("https?:\/\/(www\.)?vidbux\.com\/[a-zA-Z0-9]+", url) is not None:
 		task = resolvers.VidbuxTask(url)
 		return task.run()
+	elif re.match("https?:\/\/(www\.)?filenuke\.com\/[a-zA-Z0-9]+", url) is not None:
+		task = resolvers.FilenukeTask(url)
+		return task.run()
 	elif re.match("https?:\/\/(www\.)?pastebin\.com\/[a-zA-Z0-9]+", url) is not None:
 		task = resolvers.PastebinTask(url)
 		return task.run()
