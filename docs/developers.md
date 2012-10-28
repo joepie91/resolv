@@ -81,6 +81,12 @@ The resolv library is a Python module - this means it can be imported like any o
 		<td>n/a</td>
 		<td>VidbuxTask</td>
 	</tr>
+	<tr>
+		<td>Filenuke</td>
+		<td>Videos</td>
+		<td>n/a</td>
+		<td>FilenukeTask</td>
+	</tr>
 </table>
 
 ## Getting started
