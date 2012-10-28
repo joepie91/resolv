@@ -23,6 +23,12 @@ suites = {
 	},
 	'youtube': {
 		"YouTube": "http://www.youtube.com/watch?v=XSGBVzeBUbk"
+	},
+	'vidxden': {
+		"VidX Den": "http://www.vidxden.com/l404fifyhfn1"
+	},
+	'vidbux': {
+		"VidBux": "http://www.vidbux.com/5ovunjri3fqq"
 	}
 }
 

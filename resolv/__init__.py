@@ -19,6 +19,12 @@ def resolve(url):
 	elif re.match("https?:\/\/(www\.)?filebox\.com\/[a-zA-Z0-9]+", url) is not None:
 		task = resolvers.FileboxTask(url)
 		return task.run()
+	elif re.match("https?:\/\/(www\.)?vidxden\.com\/[a-zA-Z0-9]+", url) is not None:
+		task = resolvers.VidxdenTask(url)
+		return task.run()
+	elif re.match("https?:\/\/(www\.)?vidbux\.com\/[a-zA-Z0-9]+", url) is not None:
+		task = resolvers.VidbuxTask(url)
+		return task.run()
 	elif re.match("https?:\/\/(www\.)?pastebin\.com\/[a-zA-Z0-9]+", url) is not None:
 		task = resolvers.PastebinTask(url)
 		return task.run()
