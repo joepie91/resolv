@@ -31,7 +31,7 @@ def resolve(url):
 	elif re.match("https?:\/\/(www\.)?pastebin\.com\/[a-zA-Z0-9]+", url) is not None:
 		task = resolvers.PastebinTask(url)
 		return task.run()
-	elif re.match("https?:\/\/(www\.)?mediafire\.com\/\?[a-z0-9]+", url) is not None:
+	elif re.match("https?:\/\/(www\.)?mediafire\.com\/(view\/)?\?[a-z0-9]+", url) is not None:
 		task = resolvers.MediafireTask(url)
 		return task.run()
 	else:

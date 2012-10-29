@@ -19,7 +19,8 @@ suites = {
 	},
 	'mediafire': {
 		"MediaFire": "http://www.mediafire.com/?vxltbkr2l9ycmah",
-		"MediaFire with password (mfddl)": "http://www.mediafire.com/?traa1p0lki9611h"
+		"MediaFire with password (mfddl)": "http://www.mediafire.com/?traa1p0lki9611h",
+		'MediaFire Document Viewer': "http://www.mediafire.com/view/?vxltbkr2l9ycmah"
 	},
 	'youtube': {
 		"YouTube": "http://www.youtube.com/watch?v=XSGBVzeBUbk"

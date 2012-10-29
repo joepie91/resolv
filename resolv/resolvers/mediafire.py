@@ -9,6 +9,17 @@ class MediafireTask(Task):
 	author_url = "http://cryto.net/~joepie91"
 	
 	def run(self):
+		url_match = re.match("(https?):\/\/(www\.)?mediafire\.com\/view\/\?([a-z0-9]+)", self.url)
+		
+		if url_match is not None:
+			self.url = "%s://%smediafire.com/?%s" % url_match.groups(1)
+		
+		url_match = re.match("(https?):\/\/(www\.)?mediafire\.com\/\?([a-z0-9]+)", self.url)
+		
+		if url_match is None:
+			self.state = "invalid"
+			raise ResolverError("The specified URL is not a valid MediaFire URL.")
+		
 		try:
 			contents = self.fetch_page(self.url)
 		except urllib2.URLError, e:
